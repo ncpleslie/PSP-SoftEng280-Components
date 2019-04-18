@@ -24,14 +24,14 @@
         </b-tabs>
       </b-card>
     </b-container>
-    <rules :rule="getGameRules()"></rules>
+    <RulesComponent :rule="getGameRules()"></RulesComponent>
   </div>
 </template>
 
 <script>
 import JumbotronComponent from "./components/JumbotronComponent";
 import GameComponent from "./components/GameComponent";
-import Rules from "./components/Rules";
+import RulesComponent from "./components/RulesComponent";
 
 export default {
   data: function() {
@@ -74,9 +74,9 @@ export default {
     }
   },
   components: {
+    JumbotronComponent,
     GameComponent,
-    Rules,
-    JumbotronComponent
+    RulesComponent
   }
 };
 // eslint-disable-next-line no-unused-vars

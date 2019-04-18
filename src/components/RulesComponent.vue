@@ -3,8 +3,8 @@
     <b-container>
       <b-card no-body>
         <b-container>
-        <h1>Rules</h1>
-        <p>{{ rule }}</p>
+          <h1>Rules</h1>
+          <p>{{ rule }}</p>
         </b-container>
       </b-card>
     </b-container>
