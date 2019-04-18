@@ -1,8 +1,6 @@
 <template>
   <div>
-    <b-jumbotron header="Software Engineering 2 Assignment 1" :lead="leadString">
-      <p>PSP Assignment - Nick Leslie</p>
-    </b-jumbotron>
+    <JumbotronComponent :leadString="leadString"></JumbotronComponent>
     <b-container>
       <b-card no-body>
         <b-tabs card>
@@ -26,11 +24,14 @@
         </b-tabs>
       </b-card>
     </b-container>
+    <rules :rule="getGameRules()"></rules>
   </div>
 </template>
 
 <script>
+import JumbotronComponent from "./components/JumbotronComponent";
 import GameComponent from "./components/GameComponent";
+import Rules from "./components/Rules";
 
 export default {
   data: function() {
@@ -49,6 +50,9 @@ export default {
     }
   },
   methods: {
+    getGameRules() {
+      return this.game[this.gameNum - 1].getRules();
+    },
     gameTitle(number) {
       return `Guessing Game ${number}`;
     },
@@ -70,7 +74,9 @@ export default {
     }
   },
   components: {
-    GameComponent
+    GameComponent,
+    Rules,
+    JumbotronComponent
   }
 };
 // eslint-disable-next-line no-unused-vars
@@ -122,6 +128,10 @@ class GameOne extends Game {
       return "Please input a number";
     }
   }
+
+  getRules() {
+    return 'Write a program to play a number guessing game. The program shall generate a random number between 0 and 99. The USER inputs his/her guess, and the program shall response with "Try higher", "Try lower" or "You got it in n trials" if the guess is correct';
+  }
 }
 
 class GameTwo extends Game {
@@ -142,6 +152,10 @@ class GameTwo extends Game {
     } else {
       return "Please input a number";
     }
+  }
+
+  getRules() {
+    return 'Write a program to play a number guessing game. The program shall generate a random number between 0 and 99. The USER inputs his/her guess, and the program shall response with "COLD" if the guess is more than 40 from the target number, "COOL" if the guess is within 20-39 of the target number, “WARM” if the guess is within 10-19 of the target number, “HOT” if the guess is within 1-9 of the target number or "You got it in n trials" if the guess is correct.';
   }
 }
 </script>
