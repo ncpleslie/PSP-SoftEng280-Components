@@ -18,6 +18,8 @@
                 :count="count"
                 :gameNum="gameNum"
                 :getCalcGuess="getCalcGuess"
+                :tryHigher="tryHigher"
+                :tryLower="tryLower"
               ></GameComponent>
             </b-card-text>
           </b-tab>
@@ -39,7 +41,11 @@ export default {
       title: "Guess a number",
       guess: null,
       currentStatement: "",
-      game: [new GameOne(this.guess, 1), new GameTwo(this.guess, 2)],
+      game: [
+        new GameOne(this.guess, 1),
+        new GameTwo(this.guess, 2),
+        new GameThree(this.guess, 3)
+      ],
       count: 0,
       gameNum: 1
     };
@@ -57,6 +63,7 @@ export default {
       return `Guessing Game ${number}`;
     },
     getCalcGuess(event) {
+      console.log(this.currentStatement);
       console.log(this.game[this.gameNum - 1].getRandomNum());
       this.currentStatement = this.game[this.gameNum - 1].calcGuess(event);
       this.count = this.game[this.gameNum - 1].getCount();
@@ -70,7 +77,15 @@ export default {
       this.guess = null;
       this.currentStatement = "";
       this.count = 0;
-      this.game[this.gameNum - 1].resetRandNum();
+      this.game[this.gameNum - 1].resetStatus();
+    },
+    tryHigher() {
+      this.currentStatement = this.game[this.gameNum - 1].tryHigher();
+      this.count = this.game[this.gameNum - 1].getCount();
+    },
+    tryLower() {
+      this.currentStatement = this.game[this.gameNum - 1].tryLower();
+      this.count = this.game[this.gameNum - 1].getCount();
     }
   },
   components: {
@@ -82,7 +97,12 @@ export default {
 // eslint-disable-next-line no-unused-vars
 class Game {
   constructor(newGuess, gameNumber) {
-    this.randomNum = Math.floor(Math.random() * 99);
+    this.highestNumber = 99;
+    this.lowestNumber = 1;
+    this.randomNum = Math.floor(
+      Math.random() * (this.highestNumber - this.lowestNumber + 1) +
+        this.lowestNumber
+    );
     this.guess = newGuess;
     this.count = 0;
     this.gameNumber = gameNumber;
@@ -108,8 +128,15 @@ class Game {
     return this.gameNumber;
   }
 
-  resetRandNum() {
-    this.randomNum = Math.floor(Math.random() * 99);
+  resetStatus() {
+    this.randomNum = Math.floor(
+      Math.random() * (this.highestNumber - this.lowestNumber + 1) +
+        this.lowestNumber
+    );
+    this.count = 0;
+    this.highestNumber = 99;
+    this.lowestNumber = 1;
+    this.guess = null;
   }
 }
 
@@ -118,7 +145,7 @@ class GameOne extends Game {
     this.guess = parseInt(event.target.value);
     if (this.guess) {
       this.count++;
-      if (this.guess > 99) this.guess = 99;
+      if (this.guess > this.highestNumber) this.guess = this.highestNumber;
       if (this.guess < this.randomNum) return "Try Higher";
       if (this.guess > this.randomNum) return "Try Lower";
       if (this.guess === this.randomNum) {
@@ -139,8 +166,8 @@ class GameTwo extends Game {
     this.guess = parseInt(event.target.value);
     if (this.guess) {
       this.count++;
-      if (this.guess > 99) this.guess = 99;
-      if (this.guess < 1) this.guess = 1;
+      if (this.guess > this.highestNumber) this.guess = this.highestNumber;
+      if (this.guess < this.lowestNumber) this.guess = this.lowestNumber;
       let difference = this.getDifference(this.guess, this.randomNum);
       if (difference >= 40) return "COLD";
       if (difference >= 20 && difference <= 39) return "COOL";
@@ -156,6 +183,42 @@ class GameTwo extends Game {
 
   getRules() {
     return 'Write a program to play a number guessing game. The program shall generate a random number between 0 and 99. The USER inputs his/her guess, and the program shall response with "COLD" if the guess is more than 40 from the target number, "COOL" if the guess is within 20-39 of the target number, “WARM” if the guess is within 10-19 of the target number, “HOT” if the guess is within 1-9 of the target number or "You got it in n trials" if the guess is correct.';
+  }
+}
+
+class GameThree extends Game {
+  calcGuess(event) {
+    this.count++;
+    if (this.guess == null) {
+      this.guess = this.randomNum;
+      return this.getRandomNum().toString();
+    }
+  }
+
+  tryHigher() {
+    this.count++;
+    this.lowestNumber = this.guess;
+    let returningNumber = Math.floor(
+      Math.random() * (this.highestNumber - this.lowestNumber + 1) +
+        this.lowestNumber
+    );
+    this.guess = returningNumber;
+    return returningNumber.toString();
+  }
+
+  tryLower() {
+    this.count++;
+    this.highestNumber = this.guess;
+    let returningNumber = Math.floor(
+      Math.random() * (this.highestNumber - this.lowestNumber + 1) +
+        this.lowestNumber
+    );
+    this.guess = returningNumber;
+    return returningNumber.toString();
+  }
+
+  getRules() {
+    return "String";
   }
 }
 </script>
