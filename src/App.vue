@@ -196,6 +196,7 @@ class GameThree extends Game {
   }
 
   tryHigher() {
+    if (this.lowestNumber === this.highestNumber) return "You lying?";
     this.count++;
     this.lowestNumber = this.guess;
     let returningNumber = Math.floor(
@@ -207,6 +208,7 @@ class GameThree extends Game {
   }
 
   tryLower() {
+    if (this.lowestNumber === this.highestNumber) return "You lying?";
     this.count++;
     this.highestNumber = this.guess;
     let returningNumber = Math.floor(
