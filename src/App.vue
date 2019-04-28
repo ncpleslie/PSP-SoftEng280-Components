@@ -18,8 +18,6 @@
                 :count="count"
                 :gameNum="gameNum"
                 :getCalcGuess="getCalcGuess"
-                :tryHigher="tryHigher"
-                :tryLower="tryLower"
               ></GameComponent>
             </b-card-text>
           </b-tab>
@@ -52,7 +50,7 @@ export default {
   },
   computed: {
     leadString: function() {
-      return "Game Number " + this.gameNum;
+      return `Game Number ${this.gameNum}`;
     }
   },
   methods: {
@@ -62,10 +60,9 @@ export default {
     gameTitle(number) {
       return `Guessing Game ${number}`;
     },
-    getCalcGuess(event) {
-      console.log(this.currentStatement);
+    getCalcGuess(state) {
       console.log(this.game[this.gameNum - 1].getRandomNum());
-      this.currentStatement = this.game[this.gameNum - 1].calcGuess(event);
+      this.currentStatement = this.game[this.gameNum - 1].calcGuess(state);
       this.count = this.game[this.gameNum - 1].getCount();
       this.guess = this.game[this.gameNum - 1].getGuess();
     },
@@ -78,14 +75,6 @@ export default {
       this.currentStatement = "";
       this.count = 0;
       this.game[this.gameNum - 1].resetStatus();
-    },
-    tryHigher() {
-      this.currentStatement = this.game[this.gameNum - 1].tryHigher();
-      this.count = this.game[this.gameNum - 1].getCount();
-    },
-    tryLower() {
-      this.currentStatement = this.game[this.gameNum - 1].tryLower();
-      this.count = this.game[this.gameNum - 1].getCount();
     }
   },
   components: {
@@ -187,12 +176,14 @@ class GameTwo extends Game {
 }
 
 class GameThree extends Game {
-  calcGuess(event) {
+  calcGuess(state) {
     this.count++;
     if (this.guess == null) {
       this.guess = this.randomNum;
       return this.getRandomNum().toString();
     }
+    if (state === "Higher") return this.tryHigher();
+    if (state === "Lower") return this.tryLower();
   }
 
   tryHigher() {
@@ -220,7 +211,7 @@ class GameThree extends Game {
   }
 
   getRules() {
-    return "String";
+    return 'Write a program to play a number guessing game. The USER mentally selects a number between 0 and 99 and the computer ties to guess it. The computer outputs its guess, and the User response with "Try higher", "Try lower" or “correct”. The computer should keep count of the number of guesses. The computer should complain if the USER has lied.';
   }
 }
 </script>
