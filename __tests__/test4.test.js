@@ -1,15 +1,118 @@
-import { mount } from '@vue/test-utils'
+import {mount, createLocalVue, shallowMount} from '@vue/test-utils'
+import BootstrapVue from 'bootstrap-vue'
+import JumbotronComponent from '../src/components/JumbotronComponent'
 import GameComponent from '../src/components/GameComponent'
+import RulesComponent from '../src/components/RulesComponent'
+import MainApp from '../src/App'
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+const localVue = createLocalVue()
+localVue.use(BootstrapVue)
 
 describe('App.vue', () => {
-  it('Check newly added component', () => {
+  it('tryLower, tryHigher, Correct should appear if currentStatement is True', () => {
+    const wrapper = mount(GameComponent, {
+      propsData: {
+        gameNum: 3,
+        currentStatement: 'This is a message'
+      }
+    })
+    let buttons = wrapper.find('button.tryLower')
+    expect(buttons.exists()).toBe(true)
+    buttons = wrapper.find('button.tryHigher')
+    expect(buttons.exists()).toBe(true)
+    buttons = wrapper.find('button.correct')
+    expect(buttons.exists()).toBe(true)
+  })
+})
+
+describe('App.vue', () => {
+  it('Start button should appear if currentStatement is False', () => {
     const wrapper = mount(GameComponent, {
       propsData: {
         gameNum: 3
       }
     })
-    let buttons = wrapper.find('button.start').trigger('click')
-    console.log(wrapper.vm.currentStatement)
+    let buttons = wrapper.find('button.start')
+    expect(buttons.exists()).toBe(true)
+  })
+})
+
+describe('App.vue', () => {
+  let wrapper
+
+  beforeEach(() => {
+    wrapper = mount(MainApp, {
+      mocks: {
+        GameComponent
+      },
+      title: 'Guess a number',
+      guess: null,
+      currentStatement: '',
+      game: [new GameThree(null, 3)],
+      count: 0,
+      gameNum: 3
+    })
+  })
+  it('checks the component exists', () => {
+    expect(wrapper.exists()).toBe(true)
+  })
+
+  it('Checks buttons exists and changes if clicked', () => {
+    wrapper.vm.$nextTick().then(() => {
+      console.log('he1')
+      let game = wrapper.find(GameComponent)
+      expect(game.exists()).toBe(true)
+      let button = game.find('button.start')
+      expect(button.exists()).toBe(true)
+      // buttons.trigger('click')
+      console.log('he2')
+    })
+  })
+})
+
+describe('App.vue', () => {
+  it('Start button should appear if currentStatement is False', () => {
+    const wrapper = mount(GameComponent, {
+      propsData: {
+        gameNum: 3
+      }
+    })
+    let buttons = wrapper.find('button.start')
+    expect(buttons.exists()).toBe(true)
+  })
+})
+
+describe('App.vue', () => {
+  let wrapper
+
+  beforeEach(() => {
+    wrapper = mount(MainApp, {
+      mocks: {
+        GameComponent
+      },
+      title: 'Guess a number',
+      guess: null,
+      currentStatement: '',
+      game: [
+        new GameOne(null, 1),
+        new GameTwo(null, 2),
+        new GameThree(null, 3)
+      ],
+      count: 0,
+      gameNum: 1
+    })
+  })
+  it('checks the component exists', () => {
+    expect(wrapper.exists()).toBe(true)
+  })
+
+  it('Checks if three components loaded', () => {
+    wrapper.vm.$nextTick().then(() => {
+      let game = wrapper.findAll(GameComponent)
+      expect(game.length).toEqual(3)
+    })
   })
 })
 

@@ -16,7 +16,7 @@ export default {
   props: {
     rule: String
   }
-};
+}
 </script>
 
 <style scoped>
@@ -24,5 +24,3 @@ div {
   margin: 20px auto;
 }
 </style>
-
-
