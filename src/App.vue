@@ -116,6 +116,18 @@ class Game {
     this.highestNumber = 99
     this.lowestNumber = 1
     this.guess = null
+    this.storedNumState = {
+      hotNum: null,
+      warmNum: null,
+      coolNum: null,
+      coldNum: null
+    }
+    this.usedNum = []
+    this.loopPrevention = 0
+  }
+
+  isString(value) {
+    return typeof value === 'string' || value instanceof String
   }
 }
 
@@ -207,6 +219,7 @@ class GameFour extends Game {
       coldNum: null
     }
     this.usedNum = []
+    this.loopPrevention = 0
   }
   calcGuess(state) {
     this.count++
@@ -221,45 +234,57 @@ class GameFour extends Game {
   }
 
   getCold() {
+    if (this.storedNumState.hotNum) return this.getHot()
+    if (this.storedNumState.warmNum) return this.getWarm()
     if (this.storedNumState.coolNum) return this.getCool()
 
-    if (this.storedNumState.coldNum === null) this.storedNumState.coldNum = this.guess
+    if (!this.storedNumState.coldNum) this.storedNumState.coldNum = this.guess
+
     let differenceAmount = 99
     let randNumInRange = this.getRandNumWithinRange(this.storedNumState.coldNum, differenceAmount)
-    this.guess = randNumInRange
-    console.log(`Cold Function: Min: ${this.storedNumState.coldNum - differenceAmount} Max: ${this.storedNumState.coldNum + differenceAmount} Base Number: ${this.storedNumState.coldNum} Chosen Number: ${this.checkedNumber}`)
+    if (!this.isString(randNumInRange)) this.guess = randNumInRange
+    console.log(`Cold Function: Min: ${this.storedNumState.coldNum - differenceAmount} Max: ${this.storedNumState.coldNum + differenceAmount} Base Number: ${this.storedNumState.coldNum} Chosen Number: ${randNumInRange}`)
+    console.log(this.storedNumState)
     return randNumInRange.toString()
   }
 
   getCool() {
+    if (this.storedNumState.hotNum) return this.getHot()
     if (this.storedNumState.warmNum) return this.getWarm()
 
-    if (this.storedNumState.coolNum === null) this.storedNumState.coolNum = this.guess
+    if (!this.storedNumState.coolNum) this.storedNumState.coolNum = this.guess
+
     let differenceAmount = 39
     let randNumInRange = this.getRandNumWithinRange(this.storedNumState.coolNum, differenceAmount)
-    this.guess = randNumInRange
-    console.log(`Cool Function: Min: ${this.storedNumState.coolNum - differenceAmount} Max: ${this.storedNumState.coolNum + differenceAmount} Base Number: ${this.storedNumState.coolNum} Chosen Number: ${this.checkedNumber}`)
+    if (!this.isString(randNumInRange)) this.guess = randNumInRange
+    console.log(`Cool Function: Min: ${this.storedNumState.coolNum - differenceAmount} Max: ${this.storedNumState.coolNum + differenceAmount} Base Number: ${this.storedNumState.coolNum} Chosen Number: ${randNumInRange}`)
+    console.log(this.storedNumState)
+
     return randNumInRange.toString()
   }
 
   getWarm() {
     if (this.storedNumState.hotNum) return this.getHot()
+    if (!this.storedNumState.warmNum) this.storedNumState.warmNum = this.guess
 
-    if (this.storedNumState.warmNum === null) this.storedNumState.warmNum = this.guess
     let differenceAmount = 19
     let randNumInRange = this.getRandNumWithinRange(this.storedNumState.warmNum, differenceAmount)
-    this.guess = randNumInRange
-    console.log(`Warm Function: Min: ${this.storedNumState.warmNum - differenceAmount} Max: ${this.storedNumState.warmNum + differenceAmount} Base Number: ${this.storedNumState.warmNum} Chosen Number: ${this.checkedNumber}`)
+    if (!this.isString(randNumInRange)) this.guess = randNumInRange
+    console.log(`Warm Function: Min: ${this.storedNumState.warmNum - differenceAmount} Max: ${this.storedNumState.warmNum + differenceAmount} Base Number: ${this.storedNumState.warmNum} Chosen Number: ${randNumInRange}`)
+    console.log(this.storedNumState)
+
     return randNumInRange.toString()
   }
 
   getHot() {
-    if (this.storedNumState.hotNum === null) this.storedNumState.hotNum = this.guess
+    if (!this.storedNumState.hotNum) this.storedNumState.hotNum = this.guess
 
     let differenceAmount = 9
     let randNumInRange = this.getRandNumWithinRange(this.storedNumState.hotNum, differenceAmount)
-    this.guess = randNumInRange
-    console.log(`Hot Function: Min: ${this.storedNumState.hotNum - differenceAmount} Max: ${this.storedNumState.hotNum + differenceAmount} Base Number: ${this.storedNumState.hotNum} Chosen Number: ${this.checkedNumber}`)
+    if (!this.isString(randNumInRange)) this.guess = randNumInRange
+    console.log(`Hot Function: Min: ${this.storedNumState.hotNum - differenceAmount} Max: ${this.storedNumState.hotNum + differenceAmount} Base Number: ${this.storedNumState.hotNum} Chosen Number: ${randNumInRange}`)
+    console.log(this.storedNumState)
+
     return randNumInRange.toString()
   }
 
@@ -268,15 +293,19 @@ class GameFour extends Game {
     let minNum = num - range
     maxNum = this.numberChecker(maxNum)
     minNum = this.numberChecker(minNum)
+    console.log(`Min: ${minNum} Max: ${maxNum}`)
     let randNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum
-    console.log('Pre ' + this.usedNum)
     // Prevent the system from generating the same number multiple times
-    // Will create an endless loop if you run out of numbers
-    if (this.usedNum.includes(randNum)) return this.getRandNumWithinRange(num, range)
+    if (this.usedNum.includes(randNum) && this.loopPrevention <= 99) {
+      this.loopPrevention++
+      if (this.loopPrevention === 99) return 'Cheating?'
+      return this.getRandNumWithinRange(num, range)
+    }
     this.usedNum.push(randNum)
-    console.log('Post ' + this.usedNum)
     return randNum
   }
+
+  numberUsedChecker(num) {}
 
   //Check numbers are within range (0 to 99)
   numberChecker(num) {
