@@ -23,7 +23,7 @@
         v-if="!currentStatement"
         @click="getCalcGuess"
       >START</b-button>
-      <div v-if="currentStatement">
+      <div v-if="currentStatement && gameNum === 3">
         <h1>Was this your number?</h1>
         <b-alert :variant="correctStatus" show>{{ currentStatement }}</b-alert>
         <p>Total Guesses: {{ count }}</p>
@@ -33,26 +33,40 @@
           <b-button variant="info" class="tryHigher" @click="getCalcGuess('Higher')">Try Higher</b-button>
         </b-button-group>
       </div>
+      <div v-if="currentStatement && gameNum === 4">
+        <h1>Was this your number?</h1>
+        <b-alert :variant="correctStatus" show>{{ currentStatement }}</b-alert>
+        <p>Total Guesses: {{ count }}</p>
+        <b-button-group>
+          <b-button variant="info" @click="getCalcGuess('COLD')">COLD</b-button>
+          <b-button variant="primary" @click="getCalcGuess('COOL')">COOL</b-button>
+          <b-button variant="warning" @click="getCalcGuess('WARM')">WARM</b-button>
+          <b-button variant="danger" @click="getCalcGuess('HOT')">HOT</b-button>
+          <b-button variant="success" @click="alterCorrect">Correct</b-button>
+        </b-button-group>
+      </div>
     </b-container>
   </div>
 </template>
 
 <script>
 export default {
-  name: "GameComponent",
+  name: 'GameComponent',
   data: function() {
     return {
-      correctStatus: "info"
+      correctStatus: 'info'
     }
   },
   methods: {
     alterCorrect() {
       !this.currentStatement
-        ? (this.correctStatus = "info")
-        : (this.correctStatus = "success")
-      setTimeout(() => {
-        if ((this.correctStatus = "success")) this.correctStatus = "info"
-      }, 5000)
+        ? (this.correctStatus = 'info')
+        : (this.correctStatus = 'success')
+
+      if (this.correctStatus === 'success')
+        setTimeout(() => {
+          this.correctStatus = 'info'
+        }, 5000)
     }
   },
   props: {

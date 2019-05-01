@@ -1,5 +1,5 @@
 {
-  "name": "psp-softeng280-v04",
+  "name": "psp-softeng280-v05",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -55,5 +55,5 @@
     "not ie <= 8"
   ],
   "keywords": [],
-  "description": "Iteration 4"
+  "description": "Iteration 5"
 }
