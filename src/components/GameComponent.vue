@@ -20,6 +20,7 @@
       <b-button
         variant="outline-primary"
         class="start"
+        id="start"
         v-if="!currentStatement"
         @click="getCalcGuess"
       >START</b-button>

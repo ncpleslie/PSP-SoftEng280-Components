@@ -5,6 +5,8 @@
       <b-card no-body>
         <b-tabs card>
           <b-tab
+            :class="aGame.getGameNumber().toString()"
+            :id="aGame.getGameNumber().toString()"
             v-for="aGame in game"
             :title="gameTitle(aGame.getGameNumber().toString())"
             :key="aGame.getGameNumber()"
@@ -35,6 +37,7 @@ import RulesComponent from './components/RulesComponent'
 import {GameOne, GameTwo, GameThree, GameFour} from '@/model.js'
 
 export default {
+  name: 'MainApp',
   data: function() {
     return {
       title: 'Guess a number',
