@@ -214,19 +214,26 @@ export class GameFour extends Game {
     minNum = this.numberChecker(minNum)
     console.log(`Min: ${minNum} Max: ${maxNum}`)
     let randNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum
-    // Prevent the system from generating the same number multiple times
+    randNum = this.numberUsedChecker(randNum, num, range)
+    return randNum
+  }
+
+  // Prevent the system from generating the same number multiple times
+  numberUsedChecker(randNum, num, range) {
     if (this.usedNum.includes(randNum) && this.loopPrevention <= 99) {
       this.loopPrevention++
       if (this.loopPrevention === 99) return 'Cheating?'
       return this.getRandNumWithinRange(num, range)
+    } else if (!this.usedNum.includes(randNum) && this.loopPrevention <= 99) {
+      this.usedNum.push(randNum)
+      console.log(this.usedNum.sort())
+      return randNum
+    } else {
+      return "You're probably cheating"
     }
-    this.usedNum.push(randNum)
-    return randNum
   }
 
-  numberUsedChecker(num) {}
-
-  //Check numbers are within range (0 to 99)
+  // Check numbers are within range (0 to 99)
   numberChecker(num) {
     if (num < this.lowestNumber) num = this.lowestNumber
     if (num > this.highestNumber) num = this.highestNumber

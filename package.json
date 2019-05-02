@@ -7,13 +7,14 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
-    "test": "npm run unit"
+    "test": "npm run unit",
+    "format": "prettier-standard 'src/**/*.js'"
   },
   "dependencies": {
     "@vue/test-utils": "1.0.0-beta.29",
     "bootstrap-vue": "2.0.0-rc.18",
-    "eslint-config-standard": "12.0.0",
     "prettier-standard": "9.1.1",
+    "prettier-standard-formatter": "0.222222222222222.333333333333333",
     "standard": "12.0.1",
     "vue": "^2.5.22",
     "vue-template-compiler": "^2.5.22"
@@ -35,10 +36,7 @@
     "env": {
       "node": true
     },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
+    "extends": ["plugin:vue/essential", "eslint:recommended"],
     "rules": {},
     "parserOptions": {
       "parser": "babel-eslint"
@@ -49,11 +47,7 @@
       "autoprefixer": {}
     }
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ],
+  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"],
   "keywords": [],
   "description": "Iteration 5"
 }
